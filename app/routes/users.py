@@ -20,10 +20,11 @@ def get_user(user_id):
 
 @users_bp.route('/', methods=['POST'])
 def create_user():
-    data = user_schema.load(request.get_json())
-    db.session.add(data)
+    data = request.get_json()
+    user = user_schema.load(data)
+    db.session.add(user)
     db.session.commit()
-    return user_schema.jsonify(data), 201
+    return user_schema.dump(user), 201
 
 @users_bp.route('/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
