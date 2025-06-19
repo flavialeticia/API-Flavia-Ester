@@ -19,19 +19,24 @@ def get_message(message_id):
 
 @messages_bp.route('/', methods=['POST'])
 def create_message():
-    data = message_schema.load(request.get_json())
-    db.session.add(data)
+    data = request.get_json()
+    message = Message(
+        content=data['content'],
+        user_id=1  # Usuário padrão
+    )
+    db.session.add(message)
     db.session.commit()
-    return message_schema.jsonify(data), 201
+    return message_schema.jsonify(message), 201
 
 @messages_bp.route('/<int:message_id>', methods=['PUT'])
 def update_message(message_id):
     message = Message.query.get_or_404(message_id)
-    data = message_schema.load(request.get_json(), partial=True)
+    data = request.get_json()
 
-    if 'content' in request.get_json():
-        message.content = data.content
-
+    if 'content' in data:
+        message.content = data['content']
+    # Não permitimos alterar o user_id após a criação
+    
     db.session.commit()
     return message_schema.jsonify(message), 200
 

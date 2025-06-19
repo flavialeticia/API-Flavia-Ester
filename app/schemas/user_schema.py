@@ -1,14 +1,14 @@
-from .. import ma
-from marshmallow import Schema, fields, post_load
-from ..models.user import User
+from marshmallow import Schema, fields, validate, validates, ValidationError
+import re
 
 class UserSchema(Schema):
     id = fields.Int(dump_only=True)
-    email = fields.Email(required=True)
-    nome = fields.Str(required=True)
-    senha = fields.Str(load_only=True, required=True)  # senha só para load (não envia na resposta)
+    email = fields.Str(required=True, validate=validate.Email())
+    nome = fields.Str(required=True, validate=validate.Length(min=1))
+    senha = fields.Str(required=True, load_only=True, validate=validate.Length(min=8))
     created_at = fields.DateTime(dump_only=True)
 
-    @post_load
-    def make_user(self, data, **kwargs):
-        return User(**data)
+    @validates('email')
+    def validate_email(self, value):
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", value):
+            raise ValidationError("Formato de email inválido")
