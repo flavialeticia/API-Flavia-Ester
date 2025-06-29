@@ -20,17 +20,22 @@ def create_app():
 
     # Importar blueprints
     from .routes.messages import messages_bp
-    from .routes.users import users_bp  # <-- Importa o blueprint users
+    from .routes.users import users_bp
+    from .routes.comments import comments_bp 
 
     # Registrar blueprints
     app.register_blueprint(messages_bp, url_prefix="/messages")
-    app.register_blueprint(users_bp, url_prefix="/users")  # <-- Registra o blueprint users
+    app.register_blueprint(users_bp, url_prefix="/users")
+    app.register_blueprint(comments_bp, url_prefix="/comments")
 
     from .models.user import User
+    from .models.message import Message
+    from .models.comment import Comment
 
     register_error_handlers(app)
 
     return app
+
 
 from flask import jsonify
 from marshmallow import ValidationError
