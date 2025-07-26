@@ -10,6 +10,8 @@ class User(db.Model):
     senha_hash = db.Column(db.String(128), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     messages = db.relationship('Message', backref='author', lazy=True)
+    perfil = db.Column(db.String(10), default='USER')
+    refresh_tokens = db.relationship('RefreshToken', backref='user', lazy=True)
 
     @property
     def senha(self):

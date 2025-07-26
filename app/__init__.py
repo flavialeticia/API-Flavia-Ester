@@ -22,12 +22,14 @@ def create_app():
     from .routes.messages import messages_bp
     from .routes.users import users_bp
     from .routes.comments import comments_bp 
+    from .routes.auth import auth_bp
 
     # Registrar blueprints
     app.register_blueprint(messages_bp, url_prefix="/messages")
     app.register_blueprint(users_bp, url_prefix="/users")
     app.register_blueprint(comments_bp, url_prefix="/comments")
-
+    app.register_blueprint(auth_bp, url_prefix="/auth")
+    
     from .models.user import User
     from .models.message import Message
     from .models.comment import Comment
