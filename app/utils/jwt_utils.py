@@ -23,4 +23,6 @@ def create_refresh_token(user_id):
     return token, expire
 
 def decode_token(token):
-    return jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+    # Verifica expiração automaticamente
+    return jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'], options={"verify_exp": True})
+
