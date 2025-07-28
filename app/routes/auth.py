@@ -41,18 +41,22 @@ def refresh_token():
 
     try:
         payload = decode_token(token_str)
+
         if payload['type'] != 'refresh':
             raise InvalidTokenError("Token inválido")
+
+        # payload['sub'] agora é uma string, então convertemos para int
+        user_id = int(payload['sub'])
 
         token_db = RefreshToken.query.filter_by(token=token_str).first()
         if not token_db or token_db.expires_at < datetime.utcnow():
             raise Unauthorized("Refresh token expirado ou inválido")
 
-        user = User.query.get(payload['sub'])
+        user = User.query.get(user_id)
         if not user:
             raise Unauthorized("Usuário não encontrado")
 
-        # Remover token antigo para evitar reuso
+        # Remover token antigo
         db.session.delete(token_db)
 
         # Criar novo refresh token
@@ -82,8 +86,6 @@ def refresh_token():
 @jwt_required
 def logout():
     user = g.current_user
-    # Remover todos os refresh tokens do usuário
     RefreshToken.query.filter_by(user_id=user.id).delete()
     db.session.commit()
     return jsonify({'message': 'Logout realizado com sucesso'}), 200
-
