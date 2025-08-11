@@ -6,7 +6,8 @@ class UserSchema(Schema):
     email = fields.Str(required=True, validate=validate.Email())
     nome = fields.Str(required=True, validate=validate.Length(min=1))
     senha = fields.Str(required=True, load_only=True, validate=validate.Length(min=8))
-    created_at = fields.DateTime(dump_only=True)
+    perfil = fields.Str(validate=validate.OneOf(['USER', 'ADMIN']))
+    data_criacao = fields.DateTime(dump_only=True)
 
     @validates('email')
     def validate_email(self, value):

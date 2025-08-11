@@ -8,7 +8,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     nome = db.Column(db.String(100), nullable=False)
     senha_hash = db.Column(db.String(128), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
     messages = db.relationship('Message', backref='author', lazy=True)
     perfil = db.Column(db.String(10), default='USER')
     refresh_tokens = db.relationship('RefreshToken', backref='user', lazy=True)
@@ -44,5 +44,6 @@ class User(db.Model):
             'id': self.id,
             'email': self.email,
             'nome': self.nome,
-            'created_at': self.created_at.isoformat()
+            'perfil': self.perfil,
+            'data_criacao': self.data_criacao.isoformat()
         }

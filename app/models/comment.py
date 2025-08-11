@@ -4,7 +4,7 @@ from .. import db
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     conteudo = db.Column(db.String(255), nullable=False)
-    dataHora = db.Column(db.DateTime, default=datetime.utcnow)
+    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
     autor_id = db.Column(db.Integer, db.ForeignKey('user.id', name='fk_comment_user'), nullable=False)
     mensagem_id = db.Column(db.Integer, db.ForeignKey('message.id', name='fk_comment_message'), nullable=False)
 
@@ -12,7 +12,7 @@ class Comment(db.Model):
         return {
             'id': self.id,
             'conteudo': self.conteudo,
-            'dataHora': self.dataHora.isoformat(),
+            'data_criacao': self.data_criacao.isoformat(),
             'autor_id': self.autor_id,
             'mensagem_id': self.mensagem_id
         }

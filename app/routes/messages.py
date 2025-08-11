@@ -23,10 +23,17 @@ def get_message(message_id):
 @jwt_required
 def create_message():
     data = request.get_json()
+    
+    # Valide os campos obrigatórios
+    if not data.get('titulo') or not data.get('conteudo'):
+        return jsonify({"error": "titulo e conteudo são obrigatórios"}), 400
+
     message = Message(
-        content=data['content'],
+        titulo=data['titulo'],  # Campo corrigido
+        conteudo=data['conteudo'],  # Campo corrigido
         user_id=g.current_user.id
     )
+    
     db.session.add(message)
     db.session.commit()
     return jsonify(message_schema.dump(message)), 201
@@ -37,11 +44,15 @@ def update_message(message_id):
     message = Message.query.get_or_404(message_id)
     
     if message.user_id != g.current_user.id and g.current_user.perfil != 'ADMIN':
-        return jsonify({'error': 'Somente o autor ou um administrador pode editar'}), 403
+        return jsonify({'error': 'Acesso negado'}), 403
 
     data = request.get_json()
-    if 'content' in data:
-        message.content = data['content']
+    
+    # Atualize para os novos campos
+    if 'titulo' in data:
+        message.titulo = data['titulo']
+    if 'conteudo' in data:
+        message.conteudo = data['conteudo']
 
     db.session.commit()
     return jsonify(message_schema.dump(message)), 200

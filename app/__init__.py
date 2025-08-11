@@ -27,7 +27,7 @@ def create_app():
     # Registrar blueprints
     app.register_blueprint(messages_bp, url_prefix="/messages")
     app.register_blueprint(users_bp, url_prefix="/users")
-    app.register_blueprint(comments_bp, url_prefix="/comments")
+    app.register_blueprint(comments_bp)
     app.register_blueprint(auth_bp, url_prefix="/auth")
     
     from .models.user import User
