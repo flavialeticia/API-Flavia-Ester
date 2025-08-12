@@ -12,7 +12,7 @@ comments_bp = Blueprint('comments', __name__, url_prefix='/messages')
 comment_schema = CommentSchema()
 comments_schema = CommentSchema(many=True)
 
-@comments_bp.route('/<int:message_id>/comentarios', methods=['POST'])
+@comments_bp.route('/<int:message_id>/comments', methods=['POST'])
 @jwt_required
 def create_comment(message_id):
     """Create a new comment on a message"""
@@ -37,7 +37,7 @@ def create_comment(message_id):
     db.session.commit()
     return jsonify(comment_schema.dump(comment)), 201
 
-@comments_bp.route('/<int:message_id>/comentarios', methods=['GET'])
+@comments_bp.route('/<int:message_id>/comments', methods=['GET'])
 def get_comments(message_id):
     """Get all comments for a message"""
     # Check if message exists
@@ -47,7 +47,7 @@ def get_comments(message_id):
     comments = Comment.query.filter_by(mensagem_id=message_id).all()
     return jsonify(comments_schema.dump(comments)), 200
 
-@comments_bp.route('/<int:message_id>/comentarios/<int:comment_id>', methods=['PUT'])
+@comments_bp.route('/<int:message_id>/comments/<int:comment_id>', methods=['PUT'])
 @jwt_required
 def update_comment(message_id, comment_id):
     """Update a comment"""
@@ -71,7 +71,7 @@ def update_comment(message_id, comment_id):
     
     return jsonify(comment_schema.dump(comment)), 200
 
-@comments_bp.route('/<int:message_id>/comentarios/<int:comment_id>', methods=['DELETE'])
+@comments_bp.route('/<int:message_id>/comments/<int:comment_id>', methods=['DELETE'])
 @jwt_required
 def delete_comment(message_id, comment_id):
     """Delete a comment"""
